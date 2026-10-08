@@ -86,9 +86,6 @@ Once the forecasting work was done, I wanted anyone — not just someone who can
 
 The obvious risk with an LLM answering data questions is that it confidently makes numbers up. The whole design is built around stopping that: every number in an answer has to come from a real SQL result, the project's own notes, or a real Prophet model — and a separate agent checks that before the answer is shown.
 
-<!-- SCREENSHOT 1: full app view -->
-> 📸 **[Screenshot: the Streamlit app home screen]**
-
 ### How a question flows through the agents
 
 ```

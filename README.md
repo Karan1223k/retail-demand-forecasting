@@ -46,7 +46,7 @@ I also caught the same trap twice more while exploring the data: an average that
 
 What *did* hold up under scrutiny: a real, statistically confirmed ~40% sales lift from promotions, and a genuine December seasonal spike, both backed by large, comparable sample sizes.
 
-<img width="759" height="486" alt="Screenshot 2026-07-31 at 11 50 45 AM" src="https://github.com/user-attachments/assets/e629b00c-65aa-4ecb-ac63-ff3e53e56236" />
+<img width="759" height="486" alt="Screenshot 2026-07-31 at 11 50 45 AM" src="images/screenshot_1.png" />
 
 *Distribution of daily sales — right-skewed, with a long tail from December and promo-driven spikes.*
 
@@ -60,7 +60,7 @@ That helped, but the baseline still won in most stores. Something else was off.
 
 **The comparison itself was unfair.** The rolling baseline naturally updates every day with real, fresh data. ARIMA and SARIMA, meanwhile, were forecasting all 42 test days in one blind shot, with zero updates along the way — like asking someone to guess six weeks of weather today, versus a forecaster who checks this morning's real temperature before predicting the afternoon. I rebuilt the evaluation as **walk-forward validation**: refit the model daily, reveal the real outcome, then predict the next day. I also added `promo` as an input for the first time, since I already knew from a t-test that it had a large, real effect — and nothing had actually used it yet.
 
-<img width="1088" height="390" alt="image" src="https://github.com/user-attachments/assets/6b07f11a-c14f-46e2-8ee8-3ea3af1b53a4" />
+<img width="1088" height="390" alt="image" src="images/screenshot_2.png" />
 
 Once evaluation was fair, walk-forward SARIMAX beat the baseline in 4 of 6 tested stores, by 25–43%.
 
@@ -68,7 +68,7 @@ Once evaluation was fair, walk-forward SARIMAX beat the baseline in 4 of 6 teste
 
 I'd bundled two changes together — the fairer evaluation *and* the promo feature — so I couldn't tell which one deserved the credit. I built a "frozen" baseline (the honest one-shot equivalent: just repeat the last known average for all 42 days, no updates) so ARIMA/SARIMA had a fair reference point too. Then I split walk-forward into pieces — ARIMA alone, SARIMA alone, SARIMAX with promo — and ran all of it across all 6 stores.
 
-<img width="617" height="465" alt="image" src="https://github.com/user-attachments/assets/bf9363f2-fcbb-4a7d-ae30-d33d7b1f3e98" />
+<img width="617" height="465" alt="image" src="images/screenshot_3.png" />
 
 The real, precise answer: **walk-forward validation beat one-shot forecasting in every single store, without exception.** Promo's added value on top of that was inconsistent — it helped in half the stores, did nothing (or slightly hurt) in the other half.
 
@@ -118,17 +118,17 @@ Critic agent ───── checks every number and claim against the raw data
 
 ### Example: a historical question (SQL path)
 
-> <img width="1210" height="655" alt="Screenshot 2026-09-26 at 5 38 26 PM" src="https://github.com/user-attachments/assets/d0d01fe1-7b05-4bfb-9972-ab6e4c317dd3" />
+> <img width="1210" height="655" alt="Screenshot 2026-09-26 at 5 38 26 PM" src="images/screenshot_4.png" />
 
 
 ### Example: a question about the project itself (knowledge-base path)
 
-> <img width="1290" height="702" alt="Screenshot 2026-09-26 at 5 39 38 PM" src="https://github.com/user-attachments/assets/d91d4a93-8802-4f45-8632-d263320a97b9" />
+> <img width="1290" height="702" alt="Screenshot 2026-09-26 at 5 39 38 PM" src="images/screenshot_5.png" />
 
 
 ### Example: a forecast
 
-> <img width="673" height="455" alt="Screenshot 2026-09-26 at 5 40 47 PM" src="https://github.com/user-attachments/assets/251bea3f-f086-424e-8121-6fca06361a63" />
+> <img width="673" height="455" alt="Screenshot 2026-09-26 at 5 40 47 PM" src="images/screenshot_6.png" />
 
 
 ### Being honest about what it *can't* do
@@ -140,7 +140,7 @@ The part I care most about isn't the happy path — it's what happens when the s
 - Ask for a forecast without naming a store → it defaults to store 1 and **tells you it did**
 - Ask for a date far in the future → the forecast is labelled a low-confidence long-range extrapolation
 
-> <img width="650" height="258" alt="Screenshot 2026-09-26 at 5 42 53 PM" src="https://github.com/user-attachments/assets/21991cf8-06ec-404e-a0e0-650417e2ceae" />
+> <img width="650" height="258" alt="Screenshot 2026-09-26 at 5 42 53 PM" src="images/screenshot_7.png" />
 
 
 ### Evaluation

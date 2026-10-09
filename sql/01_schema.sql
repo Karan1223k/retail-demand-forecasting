@@ -1,3 +1,5 @@
+-- Run from the repo root (the CSV paths below are relative to it), e.g.:
+--   mysql --local-infile=1 -u root -p < sql/01_schema.sql
 CREATE DATABASE retail_forecasting;
 USE retail_forecasting;
 
@@ -27,7 +29,7 @@ CREATE TABLE sales (
     school_holiday TINYINT,
     FOREIGN KEY (store_id) REFERENCES stores(store_id)
 );
-LOAD DATA LOCAL INFILE '/Users/karansood/Desktop/rossmann-store-sales/store.csv'
+LOAD DATA LOCAL INFILE 'rossmann-store-sales/store.csv'
 INTO TABLE stores
 FIELDS TERMINATED BY ',' ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
@@ -39,7 +41,7 @@ SET
   promo2_since_week            = NULLIF(@promo2_week, ''),
   promo2_since_year            = NULLIF(@promo2_year, '');
 
- LOAD DATA LOCAL INFILE '/Users/karansood/Desktop/rossmann-store-sales/train.csv'
+ LOAD DATA LOCAL INFILE 'rossmann-store-sales/train.csv'
 INTO TABLE sales
 FIELDS TERMINATED BY ',' ENCLOSED BY '"'
 LINES TERMINATED BY '\n'

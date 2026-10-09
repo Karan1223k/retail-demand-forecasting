@@ -18,7 +18,7 @@ I set out to compare a few forecasting models against a simple baseline. The bas
 
 Source: [Rossmann Store Sales on Kaggle](https://www.kaggle.com/c/rossmann-store-sales)
 
-The raw CSVs aren't included in this repo (they're a few hundred MB and freely available at the link above) — download `store.csv` and `train.csv` and place them wherever your local setup points to.
+The raw CSVs aren't included in this repo (they're a few hundred MB and freely available at the link above) — download `store.csv` and `train.csv` and put them in a `rossmann-store-sales/` folder at the repo root.
 
 ## The pipeline
 
@@ -183,15 +183,21 @@ python3 -m venv retail_env
 source retail_env/bin/activate
 pip install pandas sqlalchemy pymysql mysql-connector-python python-dotenv scipy statsmodels pmdarima prophet scikit-learn matplotlib pyspark
 
-# Create a .env file (not included, for obvious reasons) with:
-# DB_HOST=localhost
-# DB_USER=root
-# DB_PASSWORD=your_password
-# DB_NAME=retail_forecasting
+# Create code/.env from the template and fill in your MySQL details
+cp .env.example .env
 
-# Run the SQL files in sql/ in order (01 through 04) against your MySQL instance,
-# then run the Python files in code/ in order (01 through 04)
+# Build the database (run from the repo root; the CSVs must be in rossmann-store-sales/)
+cd ..
+mysql -u root -p -e "SET GLOBAL local_infile = 1;"
+mysql --local-infile=1 -u root -p < sql/01_schema.sql
+mysql -u root -p retail_forecasting < sql/02_data_quality.sql
+mysql -u root -p retail_forecasting < sql/03_exploratory.sql
+mysql -u root -p retail_forecasting < sql/04_modelnput.sql
+
+# Then run the Python files in code/ in order (01 through 04)
 ```
+
+`local_infile` is off by default in recent MySQL versions, which is why it's switched on above — without it, `01_schema.sql` fails with a "loading local data is disabled" error. If you run the SQL from MySQL Workbench instead of the command line, change the two CSV paths in `01_schema.sql` to full paths, since Workbench doesn't resolve them relative to the repo.
 
 For the PySpark stage specifically, you'll also need the [MySQL Connector/J](https://dev.mysql.com/downloads/connector/j/) jar placed in `code/jars/`.
 
@@ -203,8 +209,8 @@ Needs the MySQL database from above to be running, plus a free [Gemini API key](
 cd llm
 pip install -r requirements.txt
 
-# Create llm/.env with the same DB_* values as above, plus:
-# GEMINI_API_KEY=your_key
+# Create llm/.env from the template: same DB_* values as above, plus your GEMINI_API_KEY
+cp .env.example .env
 
 python 01_test_connection.py        # check the database connection
 python 02_build_vector_store.py     # one-time: build the knowledge base (already included in the repo)
